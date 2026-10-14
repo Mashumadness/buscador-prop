@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de PHs - Zona Oeste (Apto Crédito)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --wa-green: #25d366;
+            --wa-hover: #20ba5a;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: white;
+            padding: 40px 24px 32px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-subtitle {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-top: 6px;
+        }
+
+        .badge-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Stats Row */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-top: 4px;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: -20px auto 0;
+            padding: 0 24px;
+        }
+
+        /* Filter Controls */
+        .filter-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+
+        .zone-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .zone-btn {
+            background: #f1f5f9;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .zone-btn:hover {
+            background: #e2e8f0;
+            color: var(--text-main);
+        }
+
+        .zone-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+        }
+
+        .search-inputs {
+            display: flex;
+            gap: 12px;
+            flex-grow: 1;
+            max-width: 480px;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: var(--text-muted);
+        }
+
+        .sort-select {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: white;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* Property Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+
+        .property-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .property-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-image-wrap {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .property-card:hover .card-image {
+            transform: scale(1.03);
+        }
+
+        .card-badges {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .badge-credito {
+            background: var(--success);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.04em;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .badge-zone {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(4px);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .price-val {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+        }
+
+        .expensas-tag {
+            font-size: 0.75rem;
+            color: #059669;
+            background: #d1fae5;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .property-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.7em;
+        }
+
+        .property-address {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .property-address svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            fill: var(--text-muted);
+        }
+
+        .features-pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .feature-pill {
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .inmobiliaria-row {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .inmobiliaria-name {
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Card Actions */
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-wa {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--wa-green);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 0.2s ease;
+        }
+
+        .btn-wa:hover {
+            background: var(--wa-hover);
+        }
+
+        .btn-wa svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .btn-view {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #f8fafc;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-view:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .no-results h3 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .no-results p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-title-row {
+                flex-direction: column;
+            }
+            .search-inputs {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="header-title-row">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                        <span class="badge-verified">✓ Exclusivo Apto Crédito</span>
+                        <span style="color: #94a3b8; font-size: 0.8rem;">Actualizado: 13/10/2026 02:38</span>
+                    </div>
+                    <h1>🏠 Buscador de PHs en Zona Oeste</h1>
+                    <p class="header-subtitle">Rastreo automático en inmobiliarias independientes de Ramos Mejía, Haedo y Villa Sarmiento (hasta USD 100.000)</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Propiedades Encontradas</div>
+                    <div class="stat-value">19</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Oportunidad Menor Precio</div>
+                    <div class="stat-value">USD 48.000</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Precio Promedio</div>
+                    <div class="stat-value">USD 79.331</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Zonas Rastreadas</div>
+                    <div class="stat-value">3 Zonas</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Filter Panel -->
+        <div class="filter-panel">
+            <div class="zone-buttons">
+                <button class="zone-btn active" onclick="filterByZone('all')">Todas (19)</button>
+                <button class="zone-btn" onclick="filterByZone('Ramos Mejía')">Ramos Mejía (14)</button>
+                <button class="zone-btn" onclick="filterByZone('Haedo')">Haedo (4)</button>
+                <button class="zone-btn" onclick="filterByZone('Villa Sarmiento')">Villa Sarmiento (1)</button>
+            </div>
+
+            <div class="search-inputs">
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"/></svg>
+                    <input type="text" id="searchInput" placeholder="Buscar por calle, ambientes..." oninput="handleSearch()">
+                </div>
+                <select class="sort-select" id="sortSelect" onchange="handleSort()">
+                    <option value="price-asc">Menor precio</option>
+                    <option value="price-desc">Mayor precio</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Cards Container -->
+        <div class="cards-grid" id="cardsContainer">
+            
+    <div class="property-card" data-zone="Ramos Mejía" data-price="48000" data-search="triplex de 3 ambientes en ramos mejia suipacha 1100, ramos mejía, gba oeste ramos mejía apto crédito | acepta permuta | 3 ambientes | 2 dormitorios | 1 baño pablo colace propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/640/00640244-01.jpg?v=1732112286" class="card-image" alt="Triplex de 3 ambientes en Ramos Mejia" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 48.000</div>
+                
+            </div>
+            <h2 class="property-title" title="Triplex de 3 ambientes en Ramos Mejia">Triplex de 3 ambientes en Ramos Mejia</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Suipacha 1100, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Pablo Colace Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491156339212?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20Triplex%20de%203%20ambientes%20en%20Ramos%20Mejia%20en%20Suipacha%201100%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/640244-triplex-de-3-ambientes-en-ramos-mejia" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="65000" data-search="ph  venta en ramos mejia 3 ambientes gral. guido al 900, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 1 baño maggio propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/715/00715543-01.jpg?v=1781645741" class="card-image" alt="PH  Venta en Ramos Mejia 3 ambientes" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 65.000</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="PH  Venta en Ramos Mejia 3 ambientes">PH  Venta en Ramos Mejia 3 ambientes</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Gral. Guido Al 900, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Maggio Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491125891115?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20PH%20%20Venta%20en%20Ramos%20Mejia%203%20ambientes%20en%20Gral.%20Guido%20Al%20900%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/715543-ph-venta-en-ramos-mejia-3-ambientes" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="65000" data-search="ph 3 ambientes planta baja con patio, en venta ramos mejía. pasco al 100, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 1 baño nicolás alvarez propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/652/00652208-01.jpg?v=1743435792" class="card-image" alt="PH 3 ambientes Planta Baja con Patio, en Venta Ramos Mejía." loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 65.000</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="PH 3 ambientes Planta Baja con Patio, en Venta Ramos Mejía.">PH 3 ambientes Planta Baja con Patio, en Venta Ramos Mejía.</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Pasco Al 100, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Nicolás Alvarez Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491178341992?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20PH%203%20ambientes%20Planta%20Baja%20con%20Patio%2C%20en%20Venta%20Ramos%20Mej%C3%ADa.%20en%20Pasco%20Al%20100%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/652208-ph-3-ambientes-planta-baja-con-patio-en-venta-ram" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="65900" data-search="venta dúplex 3 ambientes con patio! - ramos mejía sur constitución al 1100, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 2 baños nicolás alvarez propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/664/00664417-01.jpg?v=1757679339" class="card-image" alt="Venta Dúplex 3 ambientes con Patio! - Ramos Mejía Sur" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 65.900</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="Venta Dúplex 3 ambientes con Patio! - Ramos Mejía Sur">Venta Dúplex 3 ambientes con Patio! - Ramos Mejía Sur</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Constitución Al 1100, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Nicolás Alvarez Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491178341992?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20Venta%20D%C3%BAplex%203%20ambientes%20con%20Patio%21%20-%20Ramos%20Mej%C3%ADa%20Sur%20en%20Constituci%C3%B3n%20Al%201100%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/664417-venta-duplex-3-ambientes-con-patio-ramos-meji" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Villa Sarmiento" data-price="67900" data-search="venta ph en villa sarmiento bosch al 400, villa sarmiento, gba oeste villa sarmiento apto crédito | 3 ambientes | 2 dormitorios | 2 baños maggio propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/710/00710913-01.jpg?v=1778781945" class="card-image" alt="VENTA PH EN VILLA SARMIENTO" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Villa Sarmiento</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 67.900</div>
+                
+            </div>
+            <h2 class="property-title" title="VENTA PH EN VILLA SARMIENTO">VENTA PH EN VILLA SARMIENTO</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Bosch Al 400, Villa Sarmiento, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Maggio Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491125903335?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20VENTA%20PH%20EN%20VILLA%20SARMIENTO%20en%20Bosch%20Al%20400%2C%20Villa%20Sarmiento%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/710913-venta-ph-en-villa-sarmiento" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="69900" data-search="venta duplex 3 ambientes con patio! - ramos mejía rincon al 2700, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 2 baños nicolás alvarez propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/688/00688606-28.jpg?v=1791222151" class="card-image" alt="Venta Duplex 3 ambientes con patio! - Ramos Mejía" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 69.900</div>
+                
+            </div>
+            <h2 class="property-title" title="Venta Duplex 3 ambientes con patio! - Ramos Mejía">Venta Duplex 3 ambientes con patio! - Ramos Mejía</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Rincon Al 2700, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Nicolás Alvarez Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491178341992?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20Venta%20Duplex%203%20ambientes%20con%20patio%21%20-%20Ramos%20Mej%C3%ADa%20en%20Rincon%20Al%202700%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/688606-venta-duplex-3-ambientes-con-patio-ramos-mejia" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="70000" data-search="departamento tipo casa al frente 3 ambientes con cochera ramos mejia o´higgins 341, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 1 baño performance negocios inmobiliarios">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/737/00737164-01.jpg?v=1791128306" class="card-image" alt="Departamento Tipo Casa al frente 3 ambientes con cochera Ramos Mejia" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 70.000</div>
+                
+            </div>
+            <h2 class="property-title" title="Departamento Tipo Casa al frente 3 ambientes con cochera Ramos Mejia">Departamento Tipo Casa al frente 3 ambientes con cochera Ramos Mejia</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>O´higgins 341, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Performance Negocios Inmobiliarios</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491134509339?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20Departamento%20Tipo%20Casa%20al%20frente%203%20ambientes%20con%20cochera%20Ramos%20Mejia%20en%20O%C2%B4higgins%20341%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/737164-departamento-tipo-casa-al-frente-3-ambientes-con-c" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="74900" data-search="venta ph tipo dúplex 3 ambientes en venta! - ramos mejía urquiza  al 1200, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 1 baño nicolás alvarez propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/663/00663796-14.jpg?v=1751887505" class="card-image" alt="Venta PH tipo Dúplex 3 ambientes en Venta! - Ramos Mejía" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 74.900</div>
+                
+            </div>
+            <h2 class="property-title" title="Venta PH tipo Dúplex 3 ambientes en Venta! - Ramos Mejía">Venta PH tipo Dúplex 3 ambientes en Venta! - Ramos Mejía</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Urquiza  Al 1200, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Nicolás Alvarez Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491178341992?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20Venta%20PH%20tipo%20D%C3%BAplex%203%20ambientes%20en%20Venta%21%20-%20Ramos%20Mej%C3%ADa%20en%20Urquiza%20%20Al%201200%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/663796-venta-ph-tipo-duplex-3-ambientes-en-venta-ramo" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="78000" data-search="ph de 3 amb en 2 plantas con patio bulnes al 100, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 1 baño di fresca negocios inmobiliarios">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/709/00709828-01.jpg?v=1778195394" class="card-image" alt="PH DE 3 AMB EN 2 PLANTAS CON PATIO" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 78.000</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="PH DE 3 AMB EN 2 PLANTAS CON PATIO">PH DE 3 AMB EN 2 PLANTAS CON PATIO</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Bulnes Al 100, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Di Fresca Negocios Inmobiliarios</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491166471154?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20PH%20DE%203%20AMB%20EN%202%20PLANTAS%20CON%20PATIO%20en%20Bulnes%20Al%20100%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/709828-ph-de-3-amb-en-2-plantas-con-patio" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="78000" data-search="ph o departamento venta, ramos mejía alvarado al 300, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 1 baño maggio propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/708/00708102-09.jpg?v=1788882648" class="card-image" alt="PH o Departamento Venta, Ramos Mejía" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 78.000</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="PH o Departamento Venta, Ramos Mejía">PH o Departamento Venta, Ramos Mejía</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Alvarado Al 300, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Maggio Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491125891115?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20PH%20o%20Departamento%20Venta%2C%20Ramos%20Mej%C3%ADa%20en%20Alvarado%20Al%20300%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/708102-ph-o-departamento-venta-ramos-mejia" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Haedo" data-price="80000" data-search="ph - haedo sur luis viale al 1273, haedo, gba oeste haedo apto crédito | 3 ambientes | 2 dormitorios | 1 baño marcelo milano">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/682/00682970-01.jpg?v=1761934571" class="card-image" alt="PH - Haedo Sur" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Haedo</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 80.000</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="PH - Haedo Sur">PH - Haedo Sur</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Luis Viale Al 1273, Haedo, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Marcelo Milano</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491166917733?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20PH%20-%20Haedo%20Sur%20en%20Luis%20Viale%20Al%201273%2C%20Haedo%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/682970-ph-haedo-sur" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="84000" data-search="venta ph al frente 3 amb en ramos mejía | apto crédito | garage, balcón y patio | sin expensas beron astrada  al 800, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 1 baño esteban fleitas inmobiliaria">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/733/00733104-01.jpg?v=1789347682" class="card-image" alt="VENTA PH AL FRENTE 3 AMB EN RAMOS MEJÍA | APTO CRÉDITO | GARAGE, BALCÓN Y PATIO | SIN EXPENSAS" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 84.000</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="VENTA PH AL FRENTE 3 AMB EN RAMOS MEJÍA | APTO CRÉDITO | GARAGE, BALCÓN Y PATIO | SIN EXPENSAS">VENTA PH AL FRENTE 3 AMB EN RAMOS MEJÍA | APTO CRÉDITO | GARAGE, BALCÓN Y PATIO | SIN EXPENSAS</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Beron Astrada  Al 800, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Esteban Fleitas Inmobiliaria</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491166017582?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20VENTA%20PH%20AL%20FRENTE%203%20AMB%20EN%20RAMOS%20MEJ%C3%8DA%20%7C%20APTO%20CR%C3%89DITO%20%7C%20GARAGE%2C%20BALC%C3%93N%20Y%20PATIO%20%7C%20SIN%20EXPENSAS%20en%20Beron%20Astrada%20%20Al%20800%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/733104-venta-ph-al-frente-3-amb-en-ramos-mejia-apto-cr" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="88000" data-search="15 ramos mejía, gba oeste ramos mejía apto crédito | 15 #3561492 venta | ph boedo al 400, ramos mejia sur, ramos mejia, la matanza, g.b.a. zona oeste, argentina r mejia, ph al fte ,3 amb con espacio guardo auto pe inmobiliaria liderprop">
+        <div class="card-image-wrap">
+            <img src="https://www.liderprop.com/static/img/destacada_es-ar.png" class="card-image" alt="15" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 88.000</div>
+                
+            </div>
+            <h2 class="property-title" title="15">15</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">Cochera</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Inmobiliaria Liderprop</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://www.liderprop.com/es-ar/propiedades/3561492/venta--ph--ramos-mejia-sur/" target="_blank" class="btn-wa" style="background:#475569;">✉️ Contactar</a>
+                <a href="https://www.liderprop.com/es-ar/propiedades/3561492/venta--ph--ramos-mejia-sur/" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="94900" data-search="venta dúplex 3 ambientes con patio! - ramos mejía sur pueyrredón  al 2200, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 2 baños nicolás alvarez propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/730/00730676-01.jpg?v=1788292734" class="card-image" alt="Venta Dúplex 3 ambientes con patio! - Ramos Mejía Sur" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 94.900</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="Venta Dúplex 3 ambientes con patio! - Ramos Mejía Sur">Venta Dúplex 3 ambientes con patio! - Ramos Mejía Sur</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Pueyrredón  Al 2200, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Nicolás Alvarez Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491178341992?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20Venta%20D%C3%BAplex%203%20ambientes%20con%20patio%21%20-%20Ramos%20Mej%C3%ADa%20Sur%20en%20Pueyrred%C3%B3n%20%20Al%202200%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/730676-venta-duplex-3-ambientes-con-patio-ramos-meji" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="94900" data-search="venta ph 3 ambientes con patio y terraza privada! - ramos mejía espora  al 800, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 1 baño nicolás alvarez propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/718/00718868-19.jpg?v=1783038460" class="card-image" alt="Venta PH 3 ambientes con patio y terraza privada! - Ramos Mejía" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 94.900</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="Venta PH 3 ambientes con patio y terraza privada! - Ramos Mejía">Venta PH 3 ambientes con patio y terraza privada! - Ramos Mejía</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Espora  Al 800, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Nicolás Alvarez Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491178341992?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20Venta%20PH%203%20ambientes%20con%20patio%20y%20terraza%20privada%21%20-%20Ramos%20Mej%C3%ADa%20en%20Espora%20%20Al%20800%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/718868-venta-ph-3-ambientes-con-patio-y-terraza-privada" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Ramos Mejía" data-price="95000" data-search="venta de duplex 3 ambientes en ramos mejia apto credito berutti al 300, ramos mejía, gba oeste ramos mejía apto crédito | 3 ambientes | 2 dormitorios | 1 baño zipcode">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/684/00684764-19.jpg?v=1764285244" class="card-image" alt="venta de duplex 3 ambientes en Ramos Mejia Apto credito" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Ramos Mejía</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 95.000</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="venta de duplex 3 ambientes en Ramos Mejia Apto credito">venta de duplex 3 ambientes en Ramos Mejia Apto credito</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Berutti Al 300, Ramos Mejía, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Zipcode</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491133331995?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20venta%20de%20duplex%203%20ambientes%20en%20Ramos%20Mejia%20Apto%20credito%20en%20Berutti%20Al%20300%2C%20Ramos%20Mej%C3%ADa%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/684764-venta-de-duplex-3-ambientes-en-ramos-mejia-apto-cr" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Haedo" data-price="95000" data-search="ph 3 ambientes en venta haedo. sin expensas y cerca de acceso cacique catriel 1496, haedo, gba oeste haedo apto crédito | 3 ambientes | 2 dormitorios | 1 baño inmobiliaria carlos milani">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/695/00695196-01.jpg?v=1770130982" class="card-image" alt="PH 3 ambientes en venta Haedo. Sin expensas y cerca de acceso" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Haedo</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 95.000</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="PH 3 ambientes en venta Haedo. Sin expensas y cerca de acceso">PH 3 ambientes en venta Haedo. Sin expensas y cerca de acceso</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Cacique Catriel 1496, Haedo, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Inmobiliaria Carlos Milani</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491157956424?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20PH%203%20ambientes%20en%20venta%20Haedo.%20Sin%20expensas%20y%20cerca%20de%20acceso%20en%20Cacique%20Catriel%201496%2C%20Haedo%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/695196-ph-3-ambientes-en-venta-haedo-sin-expensas-y-cerc" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Haedo" data-price="95000" data-search="ph en haedo los andes  al 2100, haedo, gba oeste haedo apto crédito | 3 ambientes | 2 dormitorios | 1 baño zipcode">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/726/00726327-01.jpg?v=1786393887" class="card-image" alt="PH en Haedo" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Haedo</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 95.000</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="PH en Haedo">PH en Haedo</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Los Andes  Al 2100, Haedo, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Zipcode</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491133331995?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20PH%20en%20Haedo%20en%20Los%20Andes%20%20Al%202100%2C%20Haedo%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/726327-ph-en-haedo" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="property-card" data-zone="Haedo" data-price="97900" data-search="venta ph en haedo jose maria moreno  al 300, haedo, gba oeste haedo apto crédito | 3 ambientes | 2 dormitorios | 1 baño maggio propiedades">
+        <div class="card-image-wrap">
+            <img src="https://staticbp.com/img/prop_new_b/734/00734098-01.jpg?v=1789747938" class="card-image" alt="VENTA PH EN HAEDO" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'">
+            <div class="card-badges">
+                <span class="badge-credito">APTO CRÉDITO</span>
+                <span class="badge-zone">Haedo</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="price-row">
+                <div class="price-val">USD 97.900</div>
+                <span class="expensas-tag">Sin expensas</span>
+            </div>
+            <h2 class="property-title" title="VENTA PH EN HAEDO">VENTA PH EN HAEDO</h2>
+            <div class="property-address">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Jose Maria Moreno  Al 300, Haedo, GBA Oeste</span>
+            </div>
+            <div class="features-pill-row">
+                <span class="feature-pill">3 Ambientes</span><span class="feature-pill">2 Dormitorios</span>
+            </div>
+            <div class="inmobiliaria-row">
+                <span>🏢 Inmobiliaria:</span>
+                <span class="inmobiliaria-name">Maggio Propiedades</span>
+            </div>
+            <div class="card-actions">
+                <a href="https://wa.me/5491125903335?text=Hola%21%20Te%20contacto%20por%20la%20propiedad%20que%20vi%20publicada%3A%20VENTA%20PH%20EN%20HAEDO%20en%20Jose%20Maria%20Moreno%20%20Al%20300%2C%20Haedo%2C%20GBA%20Oeste.%20Quer%C3%ADa%20consultar%20si%20sigue%20disponible%20para%20visitar." target="_blank" class="btn-wa"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.101.005.241-.038.375.285.144.346.491 1.2.534 1.287s.072.188.014.303c-.058.116-.087.188-.173.289l-.26.302c-.087.087-.179.181-.077.355.101.173.451.745.968 1.206.666.593 1.228.777 1.401.864.173.087.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.044.073.044.419-.1.824z"/></svg> WhatsApp</a>
+                <a href="https://www.buscadorprop.com.ar/propiedad/734098-venta-ph-en-haedo" target="_blank" class="btn-view">Ver Ficha ↗</a>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </main>
+
+    <script>
+        let currentZone = 'all';
+        let currentQuery = '';
+
+        function filterByZone(zone) {
+            currentZone = zone;
+            document.querySelectorAll('.zone-btn').forEach(btn => {
+                if (btn.innerText.includes(zone) || (zone === 'all' && btn.innerText.includes('Todas'))) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            applyFilters();
+        }
+
+        function handleSearch() {
+            currentQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            applyFilters();
+        }
+
+        function handleSort() {
+            const sortBy = document.getElementById('sortSelect').value;
+            const container = document.getElementById('cardsContainer');
+            const cards = Array.from(container.getElementsByClassName('property-card'));
+
+            cards.sort((a, b) => {
+                const priceA = parseInt(a.getAttribute('data-price')) || 0;
+                const priceB = parseInt(b.getAttribute('data-price')) || 0;
+                return sortBy === 'price-asc' ? priceA - priceB : priceB - priceA;
+            });
+
+            cards.forEach(card => container.appendChild(card));
+        }
+
+        function applyFilters() {
+            const cards = document.querySelectorAll('.property-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const cardZone = card.getAttribute('data-zone');
+                const cardText = card.getAttribute('data-search');
+
+                const matchesZone = (currentZone === 'all' || cardZone === currentZone);
+                const matchesSearch = (!currentQuery || cardText.includes(currentQuery));
+
+                if (matchesZone && matchesSearch) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            let noRes = document.getElementById('noResultsMsg');
+            if (visibleCount === 0) {
+                if (!noRes) {
+                    noRes = document.createElement('div');
+                    noRes.id = 'noResultsMsg';
+                    noRes.className = 'no-results';
+                    noRes.innerHTML = '<h3>No se encontraron propiedades</h3><p>Probá cambiando los filtros o la búsqueda.</p>';
+                    document.getElementById('cardsContainer').appendChild(noRes);
+                }
+                noRes.style.display = 'block';
+            } else if (noRes) {
+                noRes.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
